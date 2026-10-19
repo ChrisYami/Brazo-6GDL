@@ -7,3 +7,4 @@ Asignaturas: ETN-902 Sistemas de Control II, ETN-1034 Aplicación de Técnicas d
 - `functions/api/repo.js`: API que lista, sube y elimina archivos de este repositorio.
 - `Documentacion/`: informes, planos, datasheets y evidencias.
 - `programas/`: firmware del PIC y scripts.
+# Brazo-6GDL
