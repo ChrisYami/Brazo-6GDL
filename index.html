@@ -1,126 +1,35 @@
-<!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Brazo XK-LS5B · Laboratorio de Control UMSA</title>
-<meta name="description" content="Documentación del brazo robótico de 6 grados de libertad del Laboratorio de Control, UMSA.">
-<style>
-:root{--bg:#0f2a4a;--panel:#16365e;--line:#2f5a8f;--ink:#e8f0fa;--mute:#9db7d5;--acc:#f2c230;--bad:#ff8a7a}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;background-attachment:fixed}
-body::before{content:"";position:fixed;inset:0;background:rgba(15,42,74,.88);z-index:-1}
-h1,h2,h3{font-family:"Palatino Linotype",Georgia,serif;line-height:1.15;margin:0 0 .5em}
-h1{font-size:clamp(2.2rem,6vw,4rem)}h2{font-size:2rem}a{color:var(--acc)}
-header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:1.2rem;align-items:center;padding:.7rem 1.2rem;flex-wrap:wrap;z-index:5}
-header b{font-family:Georgia,serif;font-size:1.1rem;margin-right:auto}header a{text-decoration:none;color:var(--ink)}header a:hover{color:var(--acc)}
-section{max-width:1040px;margin:auto;padding:4rem 1.2rem}
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
-.hero p{color:var(--mute);max-width:46ch}
-@media(max-width:760px){.hero{grid-template-columns:1fr}}
-svg{width:100%;height:auto}.lk{stroke:var(--ink);stroke-width:9;stroke-linecap:round;fill:none}
-.jt circle{fill:var(--acc);transition:r .15s}.jt:hover circle{r:15}.jt text{font:700 11px system-ui;fill:#0f2a4a;text-anchor:middle;pointer-events:none}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
-.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--acc);padding:1rem}
-.card:target{outline:2px solid var(--acc);background:#1d4474}.card h3{font-size:1.2rem}.card small{color:var(--mute)}
-table{width:100%;border-collapse:collapse;background:var(--panel)}td,th{padding:.6rem .8rem;border-bottom:1px solid var(--line);text-align:left}
-.st{color:#0f2a4a;background:var(--acc);padding:.1rem .6rem;border-radius:99px;font-size:.85rem}
-.bar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:1rem 0}
-input,button{font:inherit;padding:.5rem .8rem;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
-button{cursor:pointer}button:hover,input:focus-visible,button:focus-visible{border-color:var(--acc);outline:none}
-#list{list-style:none;padding:0;margin:0;background:var(--panel);border:1px solid var(--line)}
-#list li{display:flex;gap:1rem;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--line)}
-#list li a{margin-right:auto}#list small{color:var(--mute)}#list button{color:var(--bad);padding:.2rem .6rem}
-#msg{color:var(--acc);min-height:1.6em}footer{text-align:center;color:var(--mute);padding:2rem}
-#modal{position:fixed;inset:0;background:rgba(5,15,30,.92);z-index:20;display:flex}#modal[hidden]{display:none}
-.mb{margin:auto;width:min(1000px,96vw);height:92vh;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);padding:.6rem}
-.mb .bar{margin:0 0 .6rem}.mb b{margin-right:auto;overflow:hidden;text-overflow:ellipsis}
-#mbody{flex:1;overflow:auto;display:flex}#mbody iframe{flex:1;border:0;background:#fff}#mbody img{max-width:100%;max-height:100%;margin:auto}
-.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}.gal figure{margin:0}
-.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);cursor:zoom-in}.gal figcaption{color:var(--mute);font-size:.85rem}
-.fl{list-style:none;padding:0;margin:0 0 1.5rem;background:var(--panel);border:1px solid var(--line)}
-.fl li{display:flex;gap:1rem;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--line);flex-wrap:wrap}.fl a{margin-right:auto}.fl small{color:var(--mute)}
-select{font:inherit;padding:.5rem;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
-</style></head><body>
-<header><b>Brazo XK-LS5B</b><a href="#brazo">Articulaciones</a><a href="#sensores">Sensores</a><a href="#documentos">Documentos</a><a href="#galeria">Galería</a><a href="#archivos">Archivos</a><a href="#equipo">Equipo</a></header>
-
-<section class="hero" id="inicio"><div>
-<h1>Brazo robótico de seis grados de libertad</h1>
-<p>Documentación del brazo del Laboratorio de Control, Ingeniería Electrónica, UMSA: informes, planos ISA e IEC, datasheets y evidencias del semestre II/2026. Toque una articulación del dibujo para ver su ficha.</p></div>
-<svg viewBox="0 0 420 330" role="img" aria-label="Esquema del brazo con las articulaciones q1 a q6">
-<rect x="40" y="290" width="150" height="24" fill="none" stroke="#e8f0fa" stroke-width="3"/>
-<path class="lk" d="M115 286V232L245 112L330 150L352 190"/><path class="lk" d="M352 190L370 232M352 190L338 236" style="stroke-width:6"/>
-<a class="jt" href="#q1"><circle cx="115" cy="284" r="12"/><text x="115" y="288">q1</text></a>
-<a class="jt" href="#q2"><circle cx="115" cy="232" r="12"/><text x="115" y="236">q2</text></a>
-<a class="jt" href="#q3"><circle cx="245" cy="112" r="12"/><text x="245" y="116">q3</text></a>
-<a class="jt" href="#q4"><circle cx="330" cy="150" r="12"/><text x="330" y="154">q4</text></a>
-<a class="jt" href="#q5"><circle cx="352" cy="190" r="12"/><text x="352" y="194">q5</text></a>
-<a class="jt" href="#q6"><circle cx="354" cy="236" r="12"/><text x="354" y="240">q6</text></a></svg></section>
-
-<section id="brazo"><h2>Articulaciones</h2><p style="color:var(--mute)">Cada articulación usa un motor paso a paso con driver bipolar (señales STEP/DIR desde el PIC 16F1946). Numeración del Laboratorio 2.</p><div class="grid" id="joints"></div></section>
-
-<section id="sensores"><h2>Sensores de referencia</h2>
-<table><thead><tr><th>Sensor</th><th>Modelo</th><th>Cant.</th><th>Ubicación</th><th>Estado</th></tr></thead><tbody id="sens"></tbody></table></section>
-
-<section id="documentos"><h2>Documentos</h2>
-<p style="color:var(--mute)">Catálogo por semestre. Busque por nombre o filtre por tipo. Los PDF se abren aquí mismo.</p>
-<div class="bar"><input id="q" type="search" placeholder="Buscar archivo" size="28"><select id="fsem"></select>
-<select id="ftipo"><option value="">Todos los tipos</option><option>Informes</option><option>Planos</option><option>Datasheets</option><option>Programas</option><option>Otros</option></select></div>
-<div id="docs"></div></section>
-
-<section id="galeria"><h2>Galería de evidencias</h2><div class="gal" id="gal"></div></section>
-
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brazo XK-LS5B · Laboratorio de Control UMSA</title><meta name="description" content="Documentación del brazo robótico de 6 grados de libertad, Laboratorio de Control, UMSA.">
+<link rel="icon" href="web/img/logo_umsa.png">
+<script>try{var t=localStorage.tema;if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Hanken+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="web/css/estilos.css"></head><body>
+<header><a class="brand" href="#inicio"><img src="web/img/logo_umsa.png" alt="" onerror="this.remove()"><b>Brazo XK-LS5B</b></a>
+<nav id="nav"><a href="#inicio">Inicio</a><a href="#documentos">Documentos</a><a href="#programas">Programas</a><a href="#galeria">Galería</a><a href="#simulador">Simulador</a><a href="#repositorio">Repositorio</a></nav><button id="tema" aria-label="Cambiar tema">Tema</button></header>
+<main>
+<section class="v" id="v-inicio"><div class="hero"><div><h1>Brazo robótico de seis grados de libertad</h1>
+<p>Documentación del Laboratorio de Control, Ingeniería Electrónica, UMSA: informes, planos ISA e IEC, programas y evidencias de cada laboratorio del semestre II/2026.</p>
+<p><a class="btn" href="#documentos">Ver documentos</a> <a class="btn" href="#simulador">Probar el simulador</a></p></div>
+<img class="foto" src="web/img/brazo.png" alt="Brazo XK-LS5B en el laboratorio" onerror="this.remove()"></div>
+<div class="stats" id="stats"></div>
+<h2>Articulaciones</h2><div class="grid" id="arts"></div>
+<h2>Laboratorios</h2><div class="grid" id="labs"></div>
+<h2>Sensores de referencia</h2><table><thead><tr><th>Sensor</th><th>Modelo</th><th>Cant.</th><th>Ubicación</th></tr></thead><tbody>
+<tr><td>Efecto Hall</td><td>NJK-5002C</td><td>5</td><td>Límite de recorrido de los ejes (homing)</td></tr>
+<tr><td>Final de carrera</td><td>M102-011</td><td>2</td><td>Pinza: límites de apertura y cierre</td></tr></tbody></table></section>
+<section class="v" id="v-documentos"><h1>Documentos</h1><p class="sub">Informes, guías, planos, esquemas, datasheets y presentaciones.</p><div class="fil" id="documentos-f"></div><div id="documentos-r"></div></section>
+<section class="v" id="v-programas"><h1>Programas</h1><p class="sub">Firmware del PIC, scripts de Python o Node-RED y archivos de MATLAB.</p><div class="fil" id="programas-f"></div><div id="programas-r"></div></section>
+<section class="v" id="v-galeria"><h1>Galería</h1><div class="bar"><button data-t="fotos" class="on">Fotos y diagramas</button><button data-t="videos">Videos</button></div><div class="gal" id="gal"></div><div class="gal" id="vid" hidden></div></section>
+<section class="v" id="v-simulador"><h1>Simulador del brazo</h1><p class="sub">Esquema lateral aproximado con los rangos del Laboratorio 2. Las longitudes de los eslabones son referenciales.</p>
+<div class="sim"><svg viewBox="0 0 420 300" role="img" aria-label="Simulador del brazo"><path d="M20 262H160" stroke="var(--ink)" stroke-width="4"/><path id="arm" fill="none" stroke="var(--ac)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><path id="grip" fill="none" stroke="var(--ac2)" stroke-width="5" stroke-linecap="round"/>
+<g font-size="11" fill="var(--mut)" text-anchor="middle"><circle cx="330" cy="70" r="30" fill="none" stroke="var(--ln)"/><line id="d1" x1="330" y1="70" x2="330" y2="44" stroke="var(--ac)" stroke-width="3"/><text x="330" y="118">q1 vista superior</text><circle cx="330" cy="190" r="30" fill="none" stroke="var(--ln)"/><line id="d6" x1="330" y1="190" x2="330" y2="164" stroke="var(--ac2)" stroke-width="3"/><text x="330" y="238">q6 giro de muñeca</text></g></svg><div id="sl"></div></div></section>
+<section class="v" id="v-repositorio"><h1>Repositorio</h1><div class="bar"><code id="crumb">/</code><button id="home">Ir a la raíz</button><input id="key" type="password" placeholder="Clave de administrador" autocomplete="off"></div>
+<ul class="fl" id="list"></ul><div id="msg" role="status"></div>
+<h2>Subir archivos</h2><form id="subir" class="form"><input id="u-f" type="file" multiple>
+<select id="u-cat"></select><input id="u-sem" value="II-2026" aria-label="Semestre"><select id="u-est"><option>En revisión</option><option>Aceptado</option></select>
+<select id="u-lab"></select><select id="u-art"></select><input id="u-d" placeholder="Descripción corta"><button>Subir</button></form>
+<h2>Videos</h2><button id="addv">Agregar video de YouTube</button></section>
+</main>
 <div id="modal" hidden><div class="mb"><div class="bar"><b id="mt"></b><a id="mdl" href="#">Descargar</a><button id="mx">Cerrar</button></div><div id="mbody"></div></div></div>
-
-<section id="archivos"><h2>Archivos del repositorio</h2>
-<div class="bar"><code id="crumb">/</code><button id="home">Ir a la raíz</button></div>
-<ul id="list"></ul>
-<div class="bar"><input id="key" type="password" placeholder="Clave de administrador" autocomplete="off">
-<input id="up" type="file" multiple><input id="dest" placeholder="Carpeta destino, ej. Documentacion/II-2026/informes" size="44"></div><div id="msg" role="status"></div></section>
-
-<section id="equipo"><h2>Equipo</h2>
-<p style="color:var(--mute)">Docente: Ing. Jorge Antonio Nava Amador. Auxiliares: Franz Choque, Fabián Plata, Limber Ajnota.</p>
-<div class="grid" id="team"></div></section>
-<footer>Universidad Mayor de San Andrés · Ingeniería Electrónica · II/2026</footer>
-
-<script>
-const $=s=>document.querySelector(s),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const J=[["q1","Base","NEMA 23","Gira la torre en el plano horizontal."],["q2","Hombro","NEMA 23","Mueve el brazo grande en el plano vertical."],["q3","Codo","NEMA 23","Mueve el brazo pequeño por correa síncrona."],["q4","Giro de muñeca","NEMA 17 / 16","Rota el antebrazo y la muñeca."],["q5","Inclinación de muñeca","NEMA 17 / 16","Orienta el efector final."],["q6","Pinza","NEMA 17 / 16","Abre y cierra los dedos."]];
-$("#joints").innerHTML=J.map(j=>`<div class="card" id="${j[0]}"><h3>${j[0]} · ${j[1]}</h3><small>${j[2]}</small><p>${j[3]}</p></div>`).join("");
-const S=[["Efecto Hall","NJK-5002C",5,"Límite de recorrido de los ejes (homing)","Por verificar"],["Final de carrera","M102-011",2,"Pinza: apertura y cierre","Por verificar"]];
-$("#sens").innerHTML=S.map(s=>"<tr>"+s.slice(0,4).map(c=>`<td>${c}</td>`).join("")+`<td><span class="st">${s[4]}</span></td></tr>`).join("");
-const T=["Diego Josué Nina Fernández","Giovanni Alexander Villca Yarari","Christian Yamil Gutierrez Ponce","Daniela Jhanin Callata Bautista","Natalia Katerina Morales Corico","Cristhian Daniel Cari Uluri"];
-$("#team").innerHTML=T.map(n=>`<div class="card"><h3>${n}</h3><small>Rol por asignar</small></div>`).join("");
-let cur="";const msg=t=>$("#msg").textContent=t,api=p=>"/api/repo?path="+encodeURIComponent(p);
-async function ls(p){cur=p;$("#dest").value=p;$("#crumb").textContent="/"+p;let d;try{d=await (await fetch(api(p))).json()}catch{msg("No se pudo conectar con la API.");return}
- if(!Array.isArray(d)){$("#list").innerHTML=`<li>${esc(d.message==="Not Found"?"Esta carpeta está vacía. Suba un archivo para empezar.":d.message||"Error")}</li>`;return}
- d.sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==="dir"?-1:1);
- const up=p?`<li><a href="#" data-d="${esc(p.split("/").slice(0,-1).join("/"))}">Subir un nivel</a></li>`:"";
- $("#list").innerHTML=up+d.filter(f=>f.name[0]!==".").map(f=>f.type==="dir"?`<li><a href="#" data-d="${esc(f.path)}">${esc(f.name)}/</a></li>`:`<li><a href="${esc(f.download_url)}" target="_blank" rel="noopener">${esc(f.name)}</a><small>${Math.ceil(f.size/1024)} KB</small><button data-x="${esc(f.path)}">Eliminar</button></li>`).join("")}
-$("#list").onclick=async e=>{const a=e.target.closest("[data-d]"),x=e.target.dataset.x;
- if(a){e.preventDefault();ls(a.dataset.d)}
- if(x&&confirm("¿Eliminar "+x+"?")){const r=await fetch(api(x),{method:"DELETE",headers:{"x-admin-key":$("#key").value}});msg(r.ok?"Eliminado: "+x:(await r.json()).message);ls(cur);loadTree()}};
-$("#home").onclick=()=>ls("");
-$("#up").onchange=async e=>{for(const f of e.target.files){const b=await new Promise(r=>{const x=new FileReader;x.onload=()=>r(x.result.split(",")[1]);x.readAsDataURL(f)});
- const r=await fetch(api(dst()+f.name),{method:"PUT",headers:{"x-admin-key":$("#key").value},body:JSON.stringify({content:b})});msg(r.ok?"Subido: "+f.name:(await r.json()).message)}e.target.value="";ls(cur);loadTree()};
-const SEM_DEF="II-2026",IMG=/\.(png|jpe?g|webp|gif)$/i,norm=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-let ALL=[],RAW="";
-const semOf=p=>{const m=p.match(/(I{1,2})-(20\d\d)/i)||p.match(/(20\d\d)-(I{1,2})/i);return m?(/^20/.test(m[1])?m[2]+"-"+m[1]:m[1]+"-"+m[2]).toUpperCase():SEM_DEF};
-const tipoOf=p=>{const s=norm(p);return s.includes("plano")?"Planos":s.includes("datasheet")?"Datasheets":s.includes("informe")?"Informes":s.includes("programa")?"Programas":"Otros"};
-const isG=f=>IMG.test(f.name)&&norm(f.path).includes("evidencias");
-async function loadTree(){try{const d=await (await fetch("/api/repo?tree=1")).json();RAW=d.raw||"";
- ALL=(d.tree||[]).filter(f=>f.type==="blob"&&!f.path.split("/").some(n=>n[0]===".")&&!/^(README\.md|index\.html|functions\/)/.test(f.path)).map(f=>({path:f.path,name:f.path.split("/").pop(),size:f.size||0,sem:semOf(f.path),tipo:tipoOf(f.path)}))}catch{ALL=[]}
- const sems=[...new Set(ALL.map(f=>f.sem))].sort().reverse(),v=$("#fsem").value;
- $("#fsem").innerHTML='<option value="">Todos los semestres</option>'+sems.map(s=>`<option${s===v?" selected":""}>${s}</option>`).join("");renderDocs();renderGal()}
-function renderDocs(){const q=norm($("#q").value),s=$("#fsem").value,t=$("#ftipo").value,by={};
- ALL.filter(f=>!isG(f)&&(!s||f.sem===s)&&(!t||f.tipo===t)&&norm(f.path).includes(q)).forEach(f=>(by[f.sem]=by[f.sem]||[]).push(f));
- $("#docs").innerHTML=Object.keys(by).sort().reverse().map(k=>`<h3>${k}</h3><ul class="fl">${by[k].map(f=>`<li><span class="st">${f.tipo}</span><a href="#" data-v="${esc(f.path)}">${esc(f.name)}</a><small>${Math.ceil(f.size/1024)} KB</small></li>`).join("")}</ul>`).join("")||"<p>No hay documentos con ese filtro. Suba archivos en la sección Archivos.</p>"}
-function renderGal(){const G=ALL.filter(isG);$("#gal").innerHTML=G.length?G.map(f=>`<figure><img loading="lazy" src="${RAW+encodeURI(f.path)}" alt="${esc(f.name)}" data-v="${esc(f.path)}"><figcaption>${esc(f.name)}</figcaption></figure>`).join(""):"<p>Aún no hay fotos. Suba imágenes a la carpeta Documentacion/evidencias.</p>"}
-async function openFile(p){const b=$("#mbody");$("#modal").hidden=false;$("#mt").textContent=p;b.textContent="Cargando…";
- const r=await fetch("/api/repo?raw=1&path="+encodeURIComponent(p));if(!r.ok){b.textContent="No se pudo abrir el archivo.";return}
- const u=URL.createObjectURL(await r.blob());$("#mdl").href=u;$("#mdl").download=p.split("/").pop();
- b.innerHTML=/\.pdf$/i.test(p)?`<iframe src="${u}" title="${esc(p)}"></iframe>`:IMG.test(p)?`<img src="${u}" alt="${esc(p)}">`:"<p>Este formato no se puede mostrar aquí. Use Descargar.</p>"}
-const closeM=()=>{$("#modal").hidden=true;$("#mbody").innerHTML=""};
-$("#mx").onclick=closeM;addEventListener("keydown",e=>e.key==="Escape"&&closeM());
-document.addEventListener("click",e=>{const v=e.target.closest("[data-v]");if(v){e.preventDefault();openFile(v.dataset.v)}});
-$("#q").oninput=$("#fsem").onchange=$("#ftipo").onchange=renderDocs;
-const dst=()=>{const d=$("#dest").value.replace(/^\/+|\/+$/g,"");return d?d+"/":""};
-ls("");loadTree();
-</script></body></html>
+<footer>Universidad Mayor de San Andrés · Carrera de Ingeniería Electrónica · Laboratorio de Control · II/2026</footer>
+<script src="web/js/app.js"></script></body></html>
