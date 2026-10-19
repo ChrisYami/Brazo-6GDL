@@ -7,6 +7,18 @@ export async function onRequest({ request, env }) {
   const api = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/${encodeURI(path)}`;
   const out = (d, s = 200) => new Response(JSON.stringify(d), { status: s, headers: { "content-type": "application/json" } });
 
+  const q = new URL(request.url).searchParams;
+  if (request.method === "GET" && q.get("tree")) {
+    const r = await fetch(`https://api.github.com/repos/${env.GITHUB_REPO}/git/trees/${branch}?recursive=1`, { headers: h });
+    const d = await r.json();
+    d.raw = `https://raw.githubusercontent.com/${env.GITHUB_REPO}/${branch}/`;
+    return out(d, r.status);
+  }
+  if (request.method === "GET" && q.get("raw")) {
+    const r = await fetch(`${api}?ref=${branch}`, { headers: { ...h, Accept: "application/vnd.github.raw+json" } });
+    const T = { pdf: "application/pdf", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif" };
+    return new Response(r.body, { status: r.status, headers: { "content-type": T[path.split(".").pop().toLowerCase()] || "application/octet-stream" } });
+  }
   if (request.method === "GET") {
     const r = await fetch(`${api}?ref=${branch}`, { headers: h });
     return out(await r.json(), r.status);

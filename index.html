@@ -29,8 +29,17 @@ button{cursor:pointer}button:hover,input:focus-visible,button:focus-visible{bord
 #list li{display:flex;gap:1rem;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--line)}
 #list li a{margin-right:auto}#list small{color:var(--mute)}#list button{color:var(--bad);padding:.2rem .6rem}
 #msg{color:var(--acc);min-height:1.6em}footer{text-align:center;color:var(--mute);padding:2rem}
+#modal{position:fixed;inset:0;background:rgba(5,15,30,.92);z-index:20;display:flex}#modal[hidden]{display:none}
+.mb{margin:auto;width:min(1000px,96vw);height:92vh;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);padding:.6rem}
+.mb .bar{margin:0 0 .6rem}.mb b{margin-right:auto;overflow:hidden;text-overflow:ellipsis}
+#mbody{flex:1;overflow:auto;display:flex}#mbody iframe{flex:1;border:0;background:#fff}#mbody img{max-width:100%;max-height:100%;margin:auto}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem}.gal figure{margin:0}
+.gal img{width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid var(--line);cursor:zoom-in}.gal figcaption{color:var(--mute);font-size:.85rem}
+.fl{list-style:none;padding:0;margin:0 0 1.5rem;background:var(--panel);border:1px solid var(--line)}
+.fl li{display:flex;gap:1rem;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--line);flex-wrap:wrap}.fl a{margin-right:auto}.fl small{color:var(--mute)}
+select{font:inherit;padding:.5rem;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
 </style></head><body>
-<header><b>Brazo XK-LS5B</b><a href="#brazo">Articulaciones</a><a href="#sensores">Sensores</a><a href="#archivos">Archivos</a><a href="#equipo">Equipo</a></header>
+<header><b>Brazo XK-LS5B</b><a href="#brazo">Articulaciones</a><a href="#sensores">Sensores</a><a href="#documentos">Documentos</a><a href="#galeria">Galería</a><a href="#archivos">Archivos</a><a href="#equipo">Equipo</a></header>
 
 <section class="hero" id="inicio"><div>
 <h1>Brazo robótico de seis grados de libertad</h1>
@@ -50,11 +59,21 @@ button{cursor:pointer}button:hover,input:focus-visible,button:focus-visible{bord
 <section id="sensores"><h2>Sensores de referencia</h2>
 <table><thead><tr><th>Sensor</th><th>Modelo</th><th>Cant.</th><th>Ubicación</th><th>Estado</th></tr></thead><tbody id="sens"></tbody></table></section>
 
+<section id="documentos"><h2>Documentos</h2>
+<p style="color:var(--mute)">Catálogo por semestre. Busque por nombre o filtre por tipo. Los PDF se abren aquí mismo.</p>
+<div class="bar"><input id="q" type="search" placeholder="Buscar archivo" size="28"><select id="fsem"></select>
+<select id="ftipo"><option value="">Todos los tipos</option><option>Informes</option><option>Planos</option><option>Datasheets</option><option>Programas</option><option>Otros</option></select></div>
+<div id="docs"></div></section>
+
+<section id="galeria"><h2>Galería de evidencias</h2><div class="gal" id="gal"></div></section>
+
+<div id="modal" hidden><div class="mb"><div class="bar"><b id="mt"></b><a id="mdl" href="#">Descargar</a><button id="mx">Cerrar</button></div><div id="mbody"></div></div></div>
+
 <section id="archivos"><h2>Archivos del repositorio</h2>
 <div class="bar"><code id="crumb">/</code><button id="home">Ir a la raíz</button></div>
 <ul id="list"></ul>
 <div class="bar"><input id="key" type="password" placeholder="Clave de administrador" autocomplete="off">
-<input id="up" type="file" multiple><span>Los archivos se suben a la carpeta abierta.</span></div><div id="msg" role="status"></div></section>
+<input id="up" type="file" multiple><input id="dest" placeholder="Carpeta destino, ej. Documentacion/II-2026/informes" size="44"></div><div id="msg" role="status"></div></section>
 
 <section id="equipo"><h2>Equipo</h2>
 <p style="color:var(--mute)">Docente: Ing. Jorge Antonio Nava Amador. Auxiliares: Franz Choque, Fabián Plata, Limber Ajnota.</p>
@@ -70,16 +89,38 @@ $("#sens").innerHTML=S.map(s=>"<tr>"+s.slice(0,4).map(c=>`<td>${c}</td>`).join("
 const T=["Diego Josué Nina Fernández","Giovanni Alexander Villca Yarari","Christian Yamil Gutierrez Ponce","Daniela Jhanin Callata Bautista","Natalia Katerina Morales Corico","Cristhian Daniel Cari Uluri"];
 $("#team").innerHTML=T.map(n=>`<div class="card"><h3>${n}</h3><small>Rol por asignar</small></div>`).join("");
 let cur="";const msg=t=>$("#msg").textContent=t,api=p=>"/api/repo?path="+encodeURIComponent(p);
-async function ls(p){cur=p;$("#crumb").textContent="/"+p;let d;try{d=await (await fetch(api(p))).json()}catch{msg("No se pudo conectar con la API.");return}
+async function ls(p){cur=p;$("#dest").value=p;$("#crumb").textContent="/"+p;let d;try{d=await (await fetch(api(p))).json()}catch{msg("No se pudo conectar con la API.");return}
  if(!Array.isArray(d)){$("#list").innerHTML=`<li>${esc(d.message==="Not Found"?"Esta carpeta está vacía. Suba un archivo para empezar.":d.message||"Error")}</li>`;return}
  d.sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==="dir"?-1:1);
  const up=p?`<li><a href="#" data-d="${esc(p.split("/").slice(0,-1).join("/"))}">Subir un nivel</a></li>`:"";
  $("#list").innerHTML=up+d.filter(f=>f.name[0]!==".").map(f=>f.type==="dir"?`<li><a href="#" data-d="${esc(f.path)}">${esc(f.name)}/</a></li>`:`<li><a href="${esc(f.download_url)}" target="_blank" rel="noopener">${esc(f.name)}</a><small>${Math.ceil(f.size/1024)} KB</small><button data-x="${esc(f.path)}">Eliminar</button></li>`).join("")}
 $("#list").onclick=async e=>{const a=e.target.closest("[data-d]"),x=e.target.dataset.x;
  if(a){e.preventDefault();ls(a.dataset.d)}
- if(x&&confirm("¿Eliminar "+x+"?")){const r=await fetch(api(x),{method:"DELETE",headers:{"x-admin-key":$("#key").value}});msg(r.ok?"Eliminado: "+x:(await r.json()).message);ls(cur)}};
+ if(x&&confirm("¿Eliminar "+x+"?")){const r=await fetch(api(x),{method:"DELETE",headers:{"x-admin-key":$("#key").value}});msg(r.ok?"Eliminado: "+x:(await r.json()).message);ls(cur);loadTree()}};
 $("#home").onclick=()=>ls("");
 $("#up").onchange=async e=>{for(const f of e.target.files){const b=await new Promise(r=>{const x=new FileReader;x.onload=()=>r(x.result.split(",")[1]);x.readAsDataURL(f)});
- const r=await fetch(api((cur?cur+"/":"")+f.name),{method:"PUT",headers:{"x-admin-key":$("#key").value},body:JSON.stringify({content:b})});msg(r.ok?"Subido: "+f.name:(await r.json()).message)}e.target.value="";ls(cur)};
-ls("");
+ const r=await fetch(api(dst()+f.name),{method:"PUT",headers:{"x-admin-key":$("#key").value},body:JSON.stringify({content:b})});msg(r.ok?"Subido: "+f.name:(await r.json()).message)}e.target.value="";ls(cur);loadTree()};
+const SEM_DEF="II-2026",IMG=/\.(png|jpe?g|webp|gif)$/i,norm=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+let ALL=[],RAW="";
+const semOf=p=>{const m=p.match(/(I{1,2})-(20\d\d)/i)||p.match(/(20\d\d)-(I{1,2})/i);return m?(/^20/.test(m[1])?m[2]+"-"+m[1]:m[1]+"-"+m[2]).toUpperCase():SEM_DEF};
+const tipoOf=p=>{const s=norm(p);return s.includes("plano")?"Planos":s.includes("datasheet")?"Datasheets":s.includes("informe")?"Informes":s.includes("programa")?"Programas":"Otros"};
+const isG=f=>IMG.test(f.name)&&norm(f.path).includes("evidencias");
+async function loadTree(){try{const d=await (await fetch("/api/repo?tree=1")).json();RAW=d.raw||"";
+ ALL=(d.tree||[]).filter(f=>f.type==="blob"&&!f.path.split("/").some(n=>n[0]===".")&&!/^(README\.md|index\.html|functions\/)/.test(f.path)).map(f=>({path:f.path,name:f.path.split("/").pop(),size:f.size||0,sem:semOf(f.path),tipo:tipoOf(f.path)}))}catch{ALL=[]}
+ const sems=[...new Set(ALL.map(f=>f.sem))].sort().reverse(),v=$("#fsem").value;
+ $("#fsem").innerHTML='<option value="">Todos los semestres</option>'+sems.map(s=>`<option${s===v?" selected":""}>${s}</option>`).join("");renderDocs();renderGal()}
+function renderDocs(){const q=norm($("#q").value),s=$("#fsem").value,t=$("#ftipo").value,by={};
+ ALL.filter(f=>!isG(f)&&(!s||f.sem===s)&&(!t||f.tipo===t)&&norm(f.path).includes(q)).forEach(f=>(by[f.sem]=by[f.sem]||[]).push(f));
+ $("#docs").innerHTML=Object.keys(by).sort().reverse().map(k=>`<h3>${k}</h3><ul class="fl">${by[k].map(f=>`<li><span class="st">${f.tipo}</span><a href="#" data-v="${esc(f.path)}">${esc(f.name)}</a><small>${Math.ceil(f.size/1024)} KB</small></li>`).join("")}</ul>`).join("")||"<p>No hay documentos con ese filtro. Suba archivos en la sección Archivos.</p>"}
+function renderGal(){const G=ALL.filter(isG);$("#gal").innerHTML=G.length?G.map(f=>`<figure><img loading="lazy" src="${RAW+encodeURI(f.path)}" alt="${esc(f.name)}" data-v="${esc(f.path)}"><figcaption>${esc(f.name)}</figcaption></figure>`).join(""):"<p>Aún no hay fotos. Suba imágenes a la carpeta Documentacion/evidencias.</p>"}
+async function openFile(p){const b=$("#mbody");$("#modal").hidden=false;$("#mt").textContent=p;b.textContent="Cargando…";
+ const r=await fetch("/api/repo?raw=1&path="+encodeURIComponent(p));if(!r.ok){b.textContent="No se pudo abrir el archivo.";return}
+ const u=URL.createObjectURL(await r.blob());$("#mdl").href=u;$("#mdl").download=p.split("/").pop();
+ b.innerHTML=/\.pdf$/i.test(p)?`<iframe src="${u}" title="${esc(p)}"></iframe>`:IMG.test(p)?`<img src="${u}" alt="${esc(p)}">`:"<p>Este formato no se puede mostrar aquí. Use Descargar.</p>"}
+const closeM=()=>{$("#modal").hidden=true;$("#mbody").innerHTML=""};
+$("#mx").onclick=closeM;addEventListener("keydown",e=>e.key==="Escape"&&closeM());
+document.addEventListener("click",e=>{const v=e.target.closest("[data-v]");if(v){e.preventDefault();openFile(v.dataset.v)}});
+$("#q").oninput=$("#fsem").onchange=$("#ftipo").onchange=renderDocs;
+const dst=()=>{const d=$("#dest").value.replace(/^\/+|\/+$/g,"");return d?d+"/":""};
+ls("");loadTree();
 </script></body></html>
