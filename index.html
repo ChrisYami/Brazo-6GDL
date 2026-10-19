@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brazo XK-LS5B · Laboratorio de Control UMSA</title>
+<meta name="description" content="Documentación del brazo robótico de 6 grados de libertad del Laboratorio de Control, UMSA.">
+<style>
+:root{--bg:#0f2a4a;--panel:#16365e;--line:#2f5a8f;--ink:#e8f0fa;--mute:#9db7d5;--acc:#f2c230;--bad:#ff8a7a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;background:rgba(15,42,74,.88);z-index:-1}
+h1,h2,h3{font-family:"Palatino Linotype",Georgia,serif;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2.2rem,6vw,4rem)}h2{font-size:2rem}a{color:var(--acc)}
+header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:1.2rem;align-items:center;padding:.7rem 1.2rem;flex-wrap:wrap;z-index:5}
+header b{font-family:Georgia,serif;font-size:1.1rem;margin-right:auto}header a{text-decoration:none;color:var(--ink)}header a:hover{color:var(--acc)}
+section{max-width:1040px;margin:auto;padding:4rem 1.2rem}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:center}
+.hero p{color:var(--mute);max-width:46ch}
+@media(max-width:760px){.hero{grid-template-columns:1fr}}
+svg{width:100%;height:auto}.lk{stroke:var(--ink);stroke-width:9;stroke-linecap:round;fill:none}
+.jt circle{fill:var(--acc);transition:r .15s}.jt:hover circle{r:15}.jt text{font:700 11px system-ui;fill:#0f2a4a;text-anchor:middle;pointer-events:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+.card{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--acc);padding:1rem}
+.card:target{outline:2px solid var(--acc);background:#1d4474}.card h3{font-size:1.2rem}.card small{color:var(--mute)}
+table{width:100%;border-collapse:collapse;background:var(--panel)}td,th{padding:.6rem .8rem;border-bottom:1px solid var(--line);text-align:left}
+.st{color:#0f2a4a;background:var(--acc);padding:.1rem .6rem;border-radius:99px;font-size:.85rem}
+.bar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin:1rem 0}
+input,button{font:inherit;padding:.5rem .8rem;border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+button{cursor:pointer}button:hover,input:focus-visible,button:focus-visible{border-color:var(--acc);outline:none}
+#list{list-style:none;padding:0;margin:0;background:var(--panel);border:1px solid var(--line)}
+#list li{display:flex;gap:1rem;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--line)}
+#list li a{margin-right:auto}#list small{color:var(--mute)}#list button{color:var(--bad);padding:.2rem .6rem}
+#msg{color:var(--acc);min-height:1.6em}footer{text-align:center;color:var(--mute);padding:2rem}
+</style></head><body>
+<header><b>Brazo XK-LS5B</b><a href="#brazo">Articulaciones</a><a href="#sensores">Sensores</a><a href="#archivos">Archivos</a><a href="#equipo">Equipo</a></header>
+
+<section class="hero" id="inicio"><div>
+<h1>Brazo robótico de seis grados de libertad</h1>
+<p>Documentación del brazo del Laboratorio de Control, Ingeniería Electrónica, UMSA: informes, planos ISA e IEC, datasheets y evidencias del semestre II/2026. Toque una articulación del dibujo para ver su ficha.</p></div>
+<svg viewBox="0 0 420 330" role="img" aria-label="Esquema del brazo con las articulaciones q1 a q6">
+<rect x="40" y="290" width="150" height="24" fill="none" stroke="#e8f0fa" stroke-width="3"/>
+<path class="lk" d="M115 286V232L245 112L330 150L352 190"/><path class="lk" d="M352 190L370 232M352 190L338 236" style="stroke-width:6"/>
+<a class="jt" href="#q1"><circle cx="115" cy="284" r="12"/><text x="115" y="288">q1</text></a>
+<a class="jt" href="#q2"><circle cx="115" cy="232" r="12"/><text x="115" y="236">q2</text></a>
+<a class="jt" href="#q3"><circle cx="245" cy="112" r="12"/><text x="245" y="116">q3</text></a>
+<a class="jt" href="#q4"><circle cx="330" cy="150" r="12"/><text x="330" y="154">q4</text></a>
+<a class="jt" href="#q5"><circle cx="352" cy="190" r="12"/><text x="352" y="194">q5</text></a>
+<a class="jt" href="#q6"><circle cx="354" cy="236" r="12"/><text x="354" y="240">q6</text></a></svg></section>
+
+<section id="brazo"><h2>Articulaciones</h2><p style="color:var(--mute)">Cada articulación usa un motor paso a paso con driver bipolar (señales STEP/DIR desde el PIC 16F1946). Numeración del Laboratorio 2.</p><div class="grid" id="joints"></div></section>
+
+<section id="sensores"><h2>Sensores de referencia</h2>
+<table><thead><tr><th>Sensor</th><th>Modelo</th><th>Cant.</th><th>Ubicación</th><th>Estado</th></tr></thead><tbody id="sens"></tbody></table></section>
+
+<section id="archivos"><h2>Archivos del repositorio</h2>
+<div class="bar"><code id="crumb">/</code><button id="home">Ir a la raíz</button></div>
+<ul id="list"></ul>
+<div class="bar"><input id="key" type="password" placeholder="Clave de administrador" autocomplete="off">
+<input id="up" type="file" multiple><span>Los archivos se suben a la carpeta abierta.</span></div><div id="msg" role="status"></div></section>
+
+<section id="equipo"><h2>Equipo</h2>
+<p style="color:var(--mute)">Docente: Ing. Jorge Antonio Nava Amador. Auxiliares: Franz Choque, Fabián Plata, Limber Ajnota.</p>
+<div class="grid" id="team"></div></section>
+<footer>Universidad Mayor de San Andrés · Ingeniería Electrónica · II/2026</footer>
+
+<script>
+const $=s=>document.querySelector(s),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const J=[["q1","Base","NEMA 23","Gira la torre en el plano horizontal."],["q2","Hombro","NEMA 23","Mueve el brazo grande en el plano vertical."],["q3","Codo","NEMA 23","Mueve el brazo pequeño por correa síncrona."],["q4","Giro de muñeca","NEMA 17 / 16","Rota el antebrazo y la muñeca."],["q5","Inclinación de muñeca","NEMA 17 / 16","Orienta el efector final."],["q6","Pinza","NEMA 17 / 16","Abre y cierra los dedos."]];
+$("#joints").innerHTML=J.map(j=>`<div class="card" id="${j[0]}"><h3>${j[0]} · ${j[1]}</h3><small>${j[2]}</small><p>${j[3]}</p></div>`).join("");
+const S=[["Efecto Hall","NJK-5002C",5,"Límite de recorrido de los ejes (homing)","Por verificar"],["Final de carrera","M102-011",2,"Pinza: apertura y cierre","Por verificar"]];
+$("#sens").innerHTML=S.map(s=>"<tr>"+s.slice(0,4).map(c=>`<td>${c}</td>`).join("")+`<td><span class="st">${s[4]}</span></td></tr>`).join("");
+const T=["Diego Josué Nina Fernández","Giovanni Alexander Villca Yarari","Christian Yamil Gutierrez Ponce","Daniela Jhanin Callata Bautista","Natalia Katerina Morales Corico","Cristhian Daniel Cari Uluri"];
+$("#team").innerHTML=T.map(n=>`<div class="card"><h3>${n}</h3><small>Rol por asignar</small></div>`).join("");
+let cur="";const msg=t=>$("#msg").textContent=t,api=p=>"/api/repo?path="+encodeURIComponent(p);
+async function ls(p){cur=p;$("#crumb").textContent="/"+p;let d;try{d=await (await fetch(api(p))).json()}catch{msg("No se pudo conectar con la API.");return}
+ if(!Array.isArray(d)){$("#list").innerHTML=`<li>${esc(d.message==="Not Found"?"Esta carpeta está vacía. Suba un archivo para empezar.":d.message||"Error")}</li>`;return}
+ d.sort((a,b)=>a.type===b.type?a.name.localeCompare(b.name):a.type==="dir"?-1:1);
+ const up=p?`<li><a href="#" data-d="${esc(p.split("/").slice(0,-1).join("/"))}">Subir un nivel</a></li>`:"";
+ $("#list").innerHTML=up+d.filter(f=>f.name[0]!==".").map(f=>f.type==="dir"?`<li><a href="#" data-d="${esc(f.path)}">${esc(f.name)}/</a></li>`:`<li><a href="${esc(f.download_url)}" target="_blank" rel="noopener">${esc(f.name)}</a><small>${Math.ceil(f.size/1024)} KB</small><button data-x="${esc(f.path)}">Eliminar</button></li>`).join("")}
+$("#list").onclick=async e=>{const a=e.target.closest("[data-d]"),x=e.target.dataset.x;
+ if(a){e.preventDefault();ls(a.dataset.d)}
+ if(x&&confirm("¿Eliminar "+x+"?")){const r=await fetch(api(x),{method:"DELETE",headers:{"x-admin-key":$("#key").value}});msg(r.ok?"Eliminado: "+x:(await r.json()).message);ls(cur)}};
+$("#home").onclick=()=>ls("");
+$("#up").onchange=async e=>{for(const f of e.target.files){const b=await new Promise(r=>{const x=new FileReader;x.onload=()=>r(x.result.split(",")[1]);x.readAsDataURL(f)});
+ const r=await fetch(api((cur?cur+"/":"")+f.name),{method:"PUT",headers:{"x-admin-key":$("#key").value},body:JSON.stringify({content:b})});msg(r.ok?"Subido: "+f.name:(await r.json()).message)}e.target.value="";ls(cur)};
+ls("");
+</script></body></html>
